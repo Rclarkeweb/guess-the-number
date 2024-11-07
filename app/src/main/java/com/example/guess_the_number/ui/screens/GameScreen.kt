@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +34,7 @@ import com.example.guess_the_number.ui.components.TextFieldComponent
 import com.example.guess_the_number.ui.theme.Purple40
 import com.example.guess_the_number.ui.theme.Purple80
 import kotlin.random.Random
+
 
 @Composable
 fun GameScreen(
@@ -54,11 +58,11 @@ fun GameScreen(
 
     // Check if all guesses have been used
     if (guessesLeft <= 0) {
-        navController.navigate("end/$guessesLeft") // goes to end screen when guesses left below zero, passes guesses left value to next screen
+        navController.navigate("end/$guessesLeft/$randomInt") // goes to end screen when guesses left below zero, passes guesses left value to next screen
     }
     // Check if guess is correct
     if (result.toInt() == randomInt) {
-        navController.navigate("end/$guessesLeft") // goes to end screen when guesses left below zero, passes guesses left value to next screen
+        navController.navigate("end/$guessesLeft/$randomInt") // goes to end screen when guesses left below zero, passes guesses left value to next screen
     }
 
 
@@ -107,9 +111,15 @@ fun GameScreen(
             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComponent(
+            TextField( //changed to TextField
                 value = usersGuess, // current value of the input text field
-                onValueChange = { usersGuess = it }, // save value typed to usersGuess
+                onValueChange = { input ->
+                    // Only update usersGuess if the input is a number
+                    if (input.all { it.isDigit() }) {
+                        usersGuess = input
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // Only allow numbers to be entered
                 modifier = Modifier
             )
 
