@@ -71,6 +71,7 @@ fun GuessTheNumberPreview() {
         val navController = rememberNavController()
         val gameViewModel: GameViewModel = viewModel()
         // GameScreen(navController, gameViewModel)
-        HomeScreen(navController, gameViewModel)
+        //HomeScreen(navController, gameViewModel)
+        // HowToPlayScreen(navController)
     }
 }
