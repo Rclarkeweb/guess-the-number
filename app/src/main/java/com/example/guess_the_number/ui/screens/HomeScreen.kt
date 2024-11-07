@@ -51,12 +51,10 @@ fun HomeScreen(
         ButtonComponent(
             onClick = {
                 gameViewModel.gameMode.value = "city"
-                gameViewModel.resetGame() // needs changing?
-                navController.navigate("game") // needs changing
+                navController.navigate("cityguesser")
             },
-            label = "Guess the capital city?",
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
+            label = "Play City Guesser",
+            modifier = Modifier.padding(horizontal = 10.dp)
         )
         Row(
             modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
