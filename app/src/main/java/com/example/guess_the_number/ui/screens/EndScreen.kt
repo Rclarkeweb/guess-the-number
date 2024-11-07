@@ -45,12 +45,12 @@ fun EndScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Display message based on guesses left
+        // Display how many guesses the user had left
         Text(
             text = if (guessesLeft > 0) {
-                "You managed to guess with \n$guessesLeft guesses left"
+                "Well done! \nYou managed to guess correctly with $guessesLeft guesses left" // Displays guesses left
             } else {
-                "Better luck next time!"
+                "You didn't guess the number. Better luck next time!" // Displays if 0 guesses left
             },
             textAlign = TextAlign.Center,
             style = TextStyle(
@@ -62,6 +62,7 @@ fun EndScreen(
                 .padding(bottom = 30.dp)
         )
 
+        // Text to display the number
         Text(
             text = "The number was",
             textAlign = TextAlign.Center,
@@ -73,9 +74,10 @@ fun EndScreen(
             modifier = Modifier
         )
 
-        // Display the random number
-        GuessResultComponent(randomInt.toString(), 200)
+        // Display actual number and gradient circle
+        GuessResultComponent(randomInt.toString(), 200) // add randomInt to string
 
+        // Display Play again button
         Row(
             modifier = Modifier.padding(top = 40.dp, bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceEvenly

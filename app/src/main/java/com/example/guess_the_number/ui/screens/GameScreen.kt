@@ -29,17 +29,36 @@ import com.example.guess_the_number.ui.components.GuessesLeftComponent
 import com.example.guess_the_number.ui.theme.Purple40
 import com.example.guess_the_number.ui.theme.Purple80
 import com.example.guess_the_number.viewmodel.GameViewModel
+import kotlin.random.Random
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+
 
 @Composable
 fun GameScreen(
     navController: NavController,
     gameViewModel: GameViewModel = viewModel() // Get ViewModel instance
 ) {
+
     val usersGuess by gameViewModel.usersGuess
     val guessesLeft by gameViewModel.guessesLeft
     val randomInt by gameViewModel.randomInt
     val difficultyLevel by gameViewModel.difficultyLevel
     val max = gameViewModel.max
+
+
+    // Check if guess is correct, if so navigate to the end screen
+    if (result == randomInt) {
+        // Stays on the game screen for 2 seconds before navigating to the end screen to show the Correct message
+        Handler(Looper.getMainLooper()).postDelayed({
+            navController.navigate("end/$guessesLeft/$randomInt") // goes to end screen when guess is equal to the actual number
+        }, 2000)
+    }
+
+    // Store guess result to display to user - Too low, too high, correct
+    var guessResult by remember { mutableStateOf("Make a guess...")}
+
 
     Column(
         modifier = Modifier
@@ -113,11 +132,16 @@ fun GameScreen(
                     textAlign = TextAlign.Center
                 )
             } else {
+              // Display the Submit guess button
+                // Execute the isGuessCorrect function to check the users guess
                 ButtonComponent(
                     onClick = {
                         gameViewModel.submitGuess()
+                        guessResult = isGuessCorrect(randomInt, usersGuess.toInt())
                         if (usersGuess.toInt() == randomInt) {
-                            navController.navigate("end")
+                          Handler(Looper.getMainLooper()).postDelayed({
+                              navController.navigate("end") // goes to end screen when guess is equal to the actual number
+                          }, 2000)
                         }
                         if (guessesLeft <= 0) {
                             navController.navigate("end")
@@ -134,7 +158,8 @@ fun GameScreen(
         Row(
             modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
         ) {
-            GuessResultComponent("Guess again...", 400)
+            GuessResultComponent(guessResult, 400)
+
         }
 
         // Finish Game Button
@@ -152,12 +177,12 @@ fun GameScreen(
     }
 }
 
-// Not called
+// Logic to check if number is correct or incorrect. Returns a message to the user
 fun isGuessCorrect(randomNum: Int, guess: Int): String {
     return when {
-        randomNum == guess -> "Correct"
-        randomNum > guess -> "Too low"
-        randomNum < guess -> "Too high"
+        randomNum == guess -> "Correct!"
+        randomNum > guess -> "Too low\nGuess again..."
+        randomNum < guess -> "Too high\nGuess again..."
         else -> "Problem!"
     }
 }
