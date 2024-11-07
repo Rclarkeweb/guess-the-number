@@ -26,6 +26,7 @@ import com.example.guess_the_number.ui.theme.Purple80
 @Composable
 fun EndScreen(
     navController: NavController,
+    guessesLeft: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -39,7 +40,11 @@ fun EndScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "You didn't manage to guess the number",
+            text = if (guessesLeft > 0) {
+                "You managed to guess with \n$guessesLeft guesses left" // Displays guesses left
+            } else {
+                "Better luck next time!" // Displays if 0 guesses left
+            },
             textAlign = TextAlign.Center,
             style = TextStyle(
                 fontSize = 40.sp,
@@ -64,18 +69,30 @@ fun EndScreen(
         // Display actual number and gradient circle
         GuessResultComponent("12", 200)
 
-        Text(
-            text = "You managed to guess with \n"
-                    + "_ guesses left",
-            textAlign = TextAlign.Center,
-            style = TextStyle(
-                fontSize = 20.sp,
-                color = Purple40,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 30.dp)
-        )
+//        Text(
+//            text = if (guessesLeft > 0) {
+//                "You managed to guess with \n$guessesLeft guesses left",
+//                textAlign = TextAlign.Center,
+//                style = TextStyle(
+//                    fontSize = 20.sp,
+//                    color = Purple40,
+//                    fontWeight = FontWeight.Bold
+//                ),
+//                modifier = Modifier
+//                    .padding(top = 20.dp, bottom = 30.dp)
+//            }
+//            else {
+//                "Better luck next time!,
+//                textAlign = TextAlign.Center,
+//                style = TextStyle(
+//                    fontSize = 20.sp,
+//                    color = Purple40,
+//                    fontWeight = FontWeight.Bold
+//                ),
+//                modifier = Modifier
+//                    .padding(top = 20.dp, bottom = 30.dp)
+//            }
+//        )
 
         Row(
             modifier = Modifier.padding(top = 40.dp, bottom = 10.dp),
