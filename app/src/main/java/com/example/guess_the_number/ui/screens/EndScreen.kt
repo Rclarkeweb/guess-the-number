@@ -40,11 +40,12 @@ fun EndScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Display how many guesses the user had left
         Text(
             text = if (guessesLeft > 0) {
-                "You managed to guess with \n$guessesLeft guesses left" // Displays guesses left
+                "Well done! \nYou managed to guess correctly with $guessesLeft guesses left" // Displays guesses left
             } else {
-                "Better luck next time!" // Displays if 0 guesses left
+                "You didn't guess the number. Better luck next time!" // Displays if 0 guesses left
             },
             textAlign = TextAlign.Center,
             style = TextStyle(
@@ -56,6 +57,7 @@ fun EndScreen(
                 .padding(bottom = 30.dp)
         )
 
+        // Text to display the number
         Text(
             text = "The number was",
             textAlign = TextAlign.Center,
@@ -70,31 +72,7 @@ fun EndScreen(
         // Display actual number and gradient circle
         GuessResultComponent(randomInt.toString(), 200) // add randomInt to string
 
-//        Text(
-//            text = if (guessesLeft > 0) {
-//                "You managed to guess with \n$guessesLeft guesses left",
-//                textAlign = TextAlign.Center,
-//                style = TextStyle(
-//                    fontSize = 20.sp,
-//                    color = Purple40,
-//                    fontWeight = FontWeight.Bold
-//                ),
-//                modifier = Modifier
-//                    .padding(top = 20.dp, bottom = 30.dp)
-//            }
-//            else {
-//                "Better luck next time!,
-//                textAlign = TextAlign.Center,
-//                style = TextStyle(
-//                    fontSize = 20.sp,
-//                    color = Purple40,
-//                    fontWeight = FontWeight.Bold
-//                ),
-//                modifier = Modifier
-//                    .padding(top = 20.dp, bottom = 30.dp)
-//            }
-//        )
-
+        // Display Play again button
         Row(
             modifier = Modifier.padding(top = 40.dp, bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
