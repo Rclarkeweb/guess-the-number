@@ -1,5 +1,3 @@
-package com.example.guess_the_number.ui.screens
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,9 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -25,47 +20,26 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.guess_the_number.ui.components.ButtonComponent
 import com.example.guess_the_number.ui.components.FinishGameButtonComponent
 import com.example.guess_the_number.ui.components.GuessResultComponent
 import com.example.guess_the_number.ui.components.GuessesLeftComponent
-import com.example.guess_the_number.ui.components.TextFieldComponent
 import com.example.guess_the_number.ui.theme.Purple40
 import com.example.guess_the_number.ui.theme.Purple80
-import kotlin.random.Random
-
+import com.example.guess_the_number.viewmodel.GameViewModel
 
 @Composable
 fun GameScreen(
     navController: NavController,
-    modifier: Modifier = Modifier,
+    gameViewModel: GameViewModel = viewModel() // Get ViewModel instance
 ) {
-
-    // Users Number Guess
-    var usersGuess by remember { mutableStateOf("") }
-
-    var result by remember { mutableStateOf(0) }
-
-    // Guesses left saved to state - this number will decrease when a user makes a guess
-    var guessesLeft by remember { mutableStateOf(5) }
-
-    val levelHighestNumber = 31
-
-    // Generate a random number and save it to state (1 inclusive and 30 exclusive (31))
-    val randomInt by remember { mutableStateOf(Random.nextInt(1, levelHighestNumber)) }
-    println(randomInt)
-
-    // Check if all guesses have been used
-    if (guessesLeft <= 0) {
-        navController.navigate("end/$guessesLeft/$randomInt") // goes to end screen when guesses left below zero, passes guesses left value to next screen
-    }
-    // Check if guess is correct
-    if (result.toInt() == randomInt) {
-        navController.navigate("end/$guessesLeft/$randomInt") // goes to end screen when guesses left below zero, passes guesses left value to next screen
-    }
-
-
+    val usersGuess by gameViewModel.usersGuess
+    val guessesLeft by gameViewModel.guessesLeft
+    val randomInt by gameViewModel.randomInt
+    val difficultyLevel by gameViewModel.difficultyLevel
+    val max = gameViewModel.max
 
     Column(
         modifier = Modifier
@@ -92,8 +66,7 @@ fun GameScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = "Guess a number between\n"
-                        + "1 and 30",
+                text = "Guess a number between\n1 and ${max - 1}",
                 style = TextStyle(
                     fontSize = 24.sp,
                     color = Purple40,
@@ -111,25 +84,23 @@ fun GameScreen(
             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextField( //changed to TextField
-                value = usersGuess, // current value of the input text field
+            TextField(
+                value = usersGuess,
                 onValueChange = { input ->
-                    // Only update usersGuess if the input is a number
                     if (input.all { it.isDigit() }) {
-                        usersGuess = input
+                        gameViewModel.usersGuess.value = input
                     }
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // Only allow numbers to be entered
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
             )
 
-            // Display a message is input field is empty and number is invalid
-            if (usersGuess.isEmpty() || (usersGuess.toIntOrNull() != null && usersGuess.toInt() > (levelHighestNumber - 1))) {
+            if (usersGuess.isEmpty() || (usersGuess.toIntOrNull() != null && usersGuess.toInt() > max -1)) {
                 Text(
                     text = if (usersGuess.isEmpty()) {
                         "Please enter a number"
                     } else {
-                        "Please only guess a number lower than ${levelHighestNumber - 1}"
+                        "Please only guess a number between 0 and ${max - 1}"
                     },
                     style = TextStyle(
                         fontSize = 14.sp,
@@ -142,14 +113,15 @@ fun GameScreen(
                     textAlign = TextAlign.Center
                 )
             } else {
-                // Display the Submit guess button
-                // Execute the isGuessCorrect function
                 ButtonComponent(
-                    onClick = { // logic changed
-                        result = usersGuess.toInt()
-                        println(result)
-                        println(randomInt)
-                        guessesLeft -= 1
+                    onClick = {
+                        gameViewModel.submitGuess()
+                        if (usersGuess.toInt() == randomInt) {
+                            navController.navigate("end")
+                        }
+                        if (guessesLeft <= 0) {
+                            navController.navigate("end")
+                        }
                     },
                     label = "Submit Guess!",
                     modifier = Modifier
@@ -162,8 +134,7 @@ fun GameScreen(
         Row(
             modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
         ) {
-
-            GuessResultComponent("Guess again... ", 400)
+            GuessResultComponent("Guess again...", 400)
         }
 
         // Finish Game Button
@@ -172,15 +143,15 @@ fun GameScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             FinishGameButtonComponent(
-                onClick = {  navController.navigate("home") },
+                onClick = { navController.navigate("home") },
                 label = "Finish game",
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
             )
         }
-
     }
 }
+
 // Not called
 fun isGuessCorrect(randomNum: Int, guess: Int): String {
     return when {
