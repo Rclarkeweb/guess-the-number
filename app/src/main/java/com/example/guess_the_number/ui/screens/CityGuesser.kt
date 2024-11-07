@@ -46,6 +46,8 @@ fun CityGuesser(
     val guessesLeft by gameViewModel.guessesLeft
     val guessResult by gameViewModel.guessResult
     val gameOver by gameViewModel.gameOver
+    val hintMessage by gameViewModel.hintMessage
+
 
     if (gameOver) {
         Handler(Looper.getMainLooper()).postDelayed({
@@ -99,6 +101,28 @@ fun CityGuesser(
             modifier = Modifier.padding(top = 10.dp)
         )
 
+        // Hint display functionality
+        if (hintMessage.isNotEmpty()) {
+            Text(
+                text = hintMessage,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = Purple40,
+                    fontWeight = FontWeight.Medium
+                ),
+                modifier = Modifier.padding(vertical = 10.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+
+        // Show Hint Button based on guesses left
+        if (guessesLeft in 1..3) {
+            ButtonComponent(
+                onClick = { gameViewModel.revealHint() },
+                label = "Hey, dumdum, need a hint?",
+                modifier = Modifier.padding(top = 10.dp)
+            )
+        }
         // Display guess result
         GuessResultComponent(guessResult, 400)
 

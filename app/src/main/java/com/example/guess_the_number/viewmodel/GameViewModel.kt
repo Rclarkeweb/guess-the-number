@@ -18,6 +18,19 @@ class GameViewModel : ViewModel() {
     private val cities = listOf("Paris", "Tokyo", "London", "New York", "Sydney")
     var correctCity = mutableStateOf(cities.random())
 
+    // Hint system for cities. Get first letter with 3 guesses left, length with 2, final letter with 1.
+
+    var hintMessage = mutableStateOf("")
+
+    fun revealHint() {
+        hintMessage.value = when (guessesLeft.value) {
+            3 -> "The first letter is '${correctCity.value.first()}'."
+            2 -> "The city has ${correctCity.value.length} letters."
+            1 -> "The last letter is '${correctCity.value.last()}'."
+            else -> ""
+        }
+    }
+
     // Moving state from GameScreen
 
     var guessResult = mutableStateOf("Make a guess...")
@@ -95,5 +108,7 @@ class GameViewModel : ViewModel() {
             randomInt.value = generateRandomNumber()
             usersGuess.value = ""
             gameMode.value = "number"
+            hintMessage.value = ""
+            correctCity.value = ""
         }
     }
