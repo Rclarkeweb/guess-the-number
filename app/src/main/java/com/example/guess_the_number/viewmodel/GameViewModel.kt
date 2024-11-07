@@ -34,10 +34,10 @@ class GameViewModel : ViewModel() {
 
     var randomInt = mutableStateOf(generateRandomNumber())
     // Generate a random number based on difficulty
-    fun generateRandomNumber() = Random.nextInt(1, max) // consider making private? I don't fully know what that does...
+    private fun generateRandomNumber() = Random.nextInt(1, max) // consider making private? I don't fully know what that does...
 
     // Moved from GameScreen
-    fun isGuessCorrect(randomNum: Int, guess: Int): String {
+    private fun isGuessCorrect(randomNum: Int, guess: Int): String {
         return when {
             randomNum == guess -> "Correct!"
             randomNum > guess -> "Too low\nGuess again..."
