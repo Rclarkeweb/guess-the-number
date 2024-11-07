@@ -27,6 +27,7 @@ import com.example.guess_the_number.ui.theme.Purple80
 fun EndScreen(
     navController: NavController,
     guessesLeft: Int,
+    randomInt: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -67,7 +68,7 @@ fun EndScreen(
         )
 
         // Display actual number and gradient circle
-        GuessResultComponent("12", 200)
+        GuessResultComponent(randomInt.toString(), 200) // add randomInt to string
 
 //        Text(
 //            text = if (guessesLeft > 0) {

@@ -66,11 +66,16 @@ fun App() {
         }
 
         // Accept guessesLeft as an argument in the end route
-        composable(route = "end/{guessesLeft}") { backStackEntry ->
+        composable(route = "end/{guessesLeft}/{randomInt}") { backStackEntry ->
             val guessesLeft = backStackEntry.arguments?.getString("guessesLeft")?.toIntOrNull() ?: 0
-            EndScreen(navController = navController, guessesLeft = guessesLeft)
+            val randomInt = backStackEntry.arguments?.getString("randomInt")?.toIntOrNull() ?: 0 // add randomInt to navigation arguments
+            EndScreen(
+                navController = navController,
+                guessesLeft = guessesLeft,
+                randomInt = randomInt
+            )
         }
-        }
+    }
 
     }
 
