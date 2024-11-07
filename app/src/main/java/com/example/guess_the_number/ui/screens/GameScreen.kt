@@ -33,6 +33,9 @@ import kotlin.random.Random
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 
 @Composable
@@ -48,15 +51,6 @@ fun GameScreen(
     val max = gameViewModel.max
 
 
-    // Check if guess is correct, if so navigate to the end screen
-    if (result == randomInt) {
-        // Stays on the game screen for 2 seconds before navigating to the end screen to show the Correct message
-        Handler(Looper.getMainLooper()).postDelayed({
-            navController.navigate("end/$guessesLeft/$randomInt") // goes to end screen when guess is equal to the actual number
-        }, 2000)
-    }
-
-    // Store guess result to display to user - Too low, too high, correct
     var guessResult by remember { mutableStateOf("Make a guess...")}
 
 
