@@ -41,6 +41,8 @@ fun GameScreen(
     // Users Number Guess
     var usersGuess by remember { mutableStateOf("") }
 
+    var result by remember { mutableStateOf(0) }
+
     // Guesses left saved to state - this number will decrease when a user makes a guess
     var guessesLeft by remember { mutableStateOf(5) }
 
@@ -49,6 +51,17 @@ fun GameScreen(
     // Generate a random number and save it to state (1 inclusive and 30 exclusive (31))
     val randomInt by remember { mutableStateOf(Random.nextInt(1, levelHighestNumber)) }
     println(randomInt)
+
+    // Check if all guesses have been used
+    if (guessesLeft <= 0) {
+        navController.navigate("end/$guessesLeft") // goes to end screen when guesses left below zero, passes guesses left value to next screen
+    }
+    // Check if guess is correct
+    if (result.toInt() == randomInt) {
+        navController.navigate("end/$guessesLeft") // goes to end screen when guesses left below zero, passes guesses left value to next screen
+    }
+
+
 
     Column(
         modifier = Modifier
@@ -122,9 +135,12 @@ fun GameScreen(
                 // Display the Submit guess button
                 // Execute the isGuessCorrect function
                 ButtonComponent(
-                    onClick = {
-                    val result = isGuessCorrect(randomInt, usersGuess.toInt())
-                        println(result)},
+                    onClick = { // logic changed
+                        result = usersGuess.toInt()
+                        println(result)
+                        println(randomInt)
+                        guessesLeft -= 1
+                    },
                     label = "Submit Guess!",
                     modifier = Modifier
                         .padding(start = 10.dp)
@@ -155,7 +171,7 @@ fun GameScreen(
 
     }
 }
-
+// Not called
 fun isGuessCorrect(randomNum: Int, guess: Int): String {
     return when {
         randomNum == guess -> "Correct"

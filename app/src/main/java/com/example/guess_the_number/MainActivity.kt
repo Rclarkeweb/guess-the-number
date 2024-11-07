@@ -10,6 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +48,8 @@ class MainActivity : ComponentActivity() {
 fun App() {
 
     val navController = rememberNavController()
+    var guessesLeft by remember { mutableStateOf(5) }
+
 
     NavHost(navController = navController, startDestination = "home") {
 
@@ -59,12 +65,15 @@ fun App() {
             GameScreen(navController)
         }
 
-        composable(route = "end") {
-            EndScreen(navController)
+        // Accept guessesLeft as an argument in the end route
+        composable(route = "end/{guessesLeft}") { backStackEntry ->
+            val guessesLeft = backStackEntry.arguments?.getString("guessesLeft")?.toIntOrNull() ?: 0
+            EndScreen(navController = navController, guessesLeft = guessesLeft)
+        }
         }
 
     }
-}
+
 
 
 
