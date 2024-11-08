@@ -45,7 +45,19 @@ fun HowToPlayScreen(
 
         // Guidance on how to play
         Text(
-            text = "You will guess a number between a randomised range",
+            text = "Pick a difficulty level: Easy, Medium or Hard",
+            style = TextStyle(
+                fontSize = 15.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Light
+            ),
+            modifier = Modifier
+                .padding(bottom = 10.dp, top = 10.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Left
+        )
+        Text(
+            text = "You will guess a number between a randomised range:\nEasy is 1 - 30\nMedium is 1 - 50\nHard is 1 - 100",
             style = TextStyle(
                 fontSize = 15.sp,
                 color = Color.Black,
@@ -77,6 +89,18 @@ fun HowToPlayScreen(
                 fontSize = 15.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Light
+            ),
+            modifier = Modifier
+                .padding(bottom = 10.dp, top = 10.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Left
+        )
+        Text(
+            text = "Good luck!",
+            style = TextStyle(
+                fontSize = 15.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
             ),
             modifier = Modifier
                 .padding(bottom = 10.dp, top = 10.dp)

@@ -85,7 +85,7 @@ fun EndScreen(
             ButtonComponent(
                 onClick = {
                     gameViewModel.resetGame() // Reset the game when "Play again" is clicked
-                    navController.navigate("game") // Navigate to the game screen
+                    navController.navigate("home") // Navigate to the game screen
                 },
                 label = "Play again",
                 modifier = Modifier

@@ -70,19 +70,8 @@ fun GuessTheNumberPreview() {
     GuessthenumberTheme {
         val navController = rememberNavController()
         val gameViewModel: GameViewModel = viewModel()
-        GameScreen(navController, gameViewModel)
+        // GameScreen(navController, gameViewModel)
+        //HomeScreen(navController, gameViewModel)
+        // HowToPlayScreen(navController)
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun GuessTheNumberPreview() {
-//    GuessthenumberTheme {
-//        val navController = rememberNavController()
-//        // HowToPlayScreen(navController)
-//        //App()
-//        GameScreen(navController)
-//        // EndScreen(navController)
-//    }
-//}
