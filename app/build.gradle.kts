@@ -18,6 +18,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    testOptions {
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging = true
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -36,6 +44,15 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    packaging {
+        resources {
+            excludes.add("META-INF/LICENSE.md")
+            excludes.add("META-INF/LICENSE")
+            excludes.add("META-INF/NOTICE.md")
+            excludes.add("META-INF/NOTICE")
+            excludes.add("META-INF/LICENSE-notice.md")
+        }
     }
 }
 
@@ -59,6 +76,21 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation("androidx.navigation:navigation-testing:2.6.0")
+
+    // For unit tests
+    testImplementation ("io.mockk:mockk:1.13.2")
+
+    // For Android instrumented tests
+    androidTestImplementation ("io.mockk:mockk-android:1.13.2")
+
+    // Compose UI testing dependencies
+    //androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.3.0"
+
+    implementation ("androidx.navigation:navigation-compose:2.4.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.7.5")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.3.0")
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 }

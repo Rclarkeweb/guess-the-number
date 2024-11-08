@@ -43,9 +43,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     // Determine max value for random number generator
     val max: Int
         get() = when (difficultyLevel.value) {
-            0 -> 31
-            1 -> 51
-            2 -> 101
+            0 -> 31 // Easy
+            1 -> 51 // Medium
+            2 -> 101 // Hard
             else -> 301 // Default to 301
         }
 

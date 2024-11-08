@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.guess_the_number.ui.components.ButtonComponent
+import com.example.guess_the_number.ui.components.DifficultyLevelComponent
+import com.example.guess_the_number.ui.components.DifficultyLevelComponent
 import com.example.guess_the_number.ui.components.MainHeadingComponent
 import com.example.guess_the_number.ui.theme.Purple40
 import com.example.guess_the_number.ui.theme.Purple80
@@ -41,12 +47,7 @@ fun HomeScreen(
     ) {
         MainHeadingComponent("Can you guess the number?")
 
-        // Difficulty Selection Box
-        Text(
-            text = "Select Difficulty Level",
-            color = Purple40,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
+
         // Button currently sets gameMode to "city", but otherwise functions like "Start Game" button
         ButtonComponent(
             onClick = {
@@ -56,33 +57,29 @@ fun HomeScreen(
             label = "Play City Guesser",
             modifier = Modifier.padding(horizontal = 10.dp)
         )
-        Row(
-            modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            ButtonComponent(
-                onClick = { gameViewModel.difficultyLevel.value = 0 },
-                label = "Easy",
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-            ButtonComponent(
-                onClick = { gameViewModel.difficultyLevel.value = 1 },
-                label = "Medium",
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-            ButtonComponent(
-                onClick = { gameViewModel.difficultyLevel.value = 2 },
-                label = "Hard",
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-            }
-        }
 
-        // Start and How to Play Buttons
-        Row(
+        // Difficulty Selection Box
+        Text(
+            text = "Select Difficulty Level",
+            color = Purple40,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+        // Display difficulty level RadioButtons
+        DifficultyLevelComponent(
+            selectedLevel = gameViewModel.difficultyLevel.value, // pass current difficultyLevel state value
+            // when user clicks a radio button that button is shown as selected and the state is updated
+            onLevelSelected = { userChosenLevel ->
+                gameViewModel.difficultyLevel.value = userChosenLevel
+            }
+        )
+
+    }
+
+    // Start game and How to Play Buttons
+    Column(
             modifier = Modifier.padding(top = 550.dp, bottom = 10.dp)
                 .safeDrawingPadding(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
 
@@ -93,14 +90,14 @@ fun HomeScreen(
                 },
                 label = "Start Game",
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
+                    .padding(vertical = 10.dp)
             )
 
             ButtonComponent(
                 onClick = { navController.navigate("howtoplay") },
                 label = "How to play",
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
+                    .padding(vertical = 10.dp)
             )
 
         }
