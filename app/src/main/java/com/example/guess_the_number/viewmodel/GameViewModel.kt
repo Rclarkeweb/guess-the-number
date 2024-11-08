@@ -1,10 +1,16 @@
 package com.example.guess_the_number.viewmodel
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import com.example.guess_the_number.cities
+import com.example.guess_the_number.ui.components.City
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import kotlin.random.Random
 
-class GameViewModel : ViewModel() {
+class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     // Create all the state we're passing around
     var usersGuess = mutableStateOf("")
@@ -14,19 +20,17 @@ class GameViewModel : ViewModel() {
 
     var gameMode = mutableStateOf("number") // "number" or "city"
 
-    // Hard coded city list game variables
-    private val cities = listOf("Paris", "Tokyo", "London", "New York", "Sydney")
-    var correctCity = mutableStateOf(cities.random())
+    // List to store city objects
 
-    // Hint system for cities. Get first letter with 3 guesses left, length with 2, final letter with 1.
+    var correctCity = mutableStateOf(cities.random())
 
     var hintMessage = mutableStateOf("")
 
     fun revealHint() {
         hintMessage.value = when (guessesLeft.value) {
-            3 -> "The first letter is '${correctCity.value.first()}'."
-            2 -> "The city has ${correctCity.value.length} letters."
-            1 -> "The last letter is '${correctCity.value.last()}'."
+            3 -> "The population is ${correctCity.value.population}"
+            2 -> "It is in the ${correctCity.value.timezone} timezone"
+            1 -> "It is in ${correctCity.value.country}"
             else -> ""
         }
     }
@@ -65,13 +69,11 @@ class GameViewModel : ViewModel() {
         if (gameMode.value == "number") {
             val guess = usersGuess.value.toIntOrNull()
 
-            // Handle invalid guesses
             if (guess == null || guess !in 1 until max) {
                 guessResult.value = "Please only guess a number between 1 and ${max - 1}"
                 return
             }
 
-            // Check if the number guess is correct
             guessResult.value = isGuessCorrect(randomInt.value, guess)
             if (guess == randomInt.value) {
                 gameOver.value = true
@@ -83,8 +85,7 @@ class GameViewModel : ViewModel() {
                 }
             }
         } else if (gameMode.value == "city") {
-            // City mode
-            if (usersGuess.value.equals(correctCity.value, ignoreCase = true)) {
+            if (usersGuess.value.lowercase() == correctCity.value.name.lowercase()) {
                 guessResult.value = "Correct!"
                 gameOver.value = true
             } else {
@@ -99,9 +100,11 @@ class GameViewModel : ViewModel() {
     }
 
 
-
         // Reset game and state variables
         fun resetGame() {
+
+            correctCity.value = cities.random() // Set to a random city from the list in the data class
+
             guessResult.value = "Make a guess..."
             gameOver.value = false
             guessesLeft.value = 5
@@ -109,6 +112,5 @@ class GameViewModel : ViewModel() {
             usersGuess.value = ""
             gameMode.value = "number"
             hintMessage.value = ""
-            correctCity.value = ""
         }
     }

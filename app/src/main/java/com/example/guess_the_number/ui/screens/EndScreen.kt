@@ -36,7 +36,7 @@ fun EndScreen(
 ) {
     val guessesLeft by gameViewModel.guessesLeft
     val correctAnswer = if (gameViewModel.gameMode.value == "city") {
-        gameViewModel.correctCity.value
+        gameViewModel.correctCity.value.name
     } else {
         gameViewModel.randomInt.value.toString()
     }
@@ -81,7 +81,7 @@ fun EndScreen(
             modifier = Modifier.padding(bottom = 10.dp)
         )
 
-        GuessResultComponent(correctAnswer, 200)
+        GuessResultComponent(correctAnswer.toString(), 200)
 
         ButtonComponent(
             onClick = {
