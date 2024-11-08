@@ -26,14 +26,20 @@ import com.example.guess_the_number.ui.theme.Purple40
 import com.example.guess_the_number.ui.theme.Purple80
 import com.example.guess_the_number.viewmodel.GameViewModel
 
+
+
+
 @Composable
 fun EndScreen(
     navController: NavController,
-    gameViewModel: GameViewModel = viewModel(), // Use GameViewModel
+    gameViewModel: GameViewModel = viewModel()
 ) {
-    // Access values from the ViewModel
     val guessesLeft by gameViewModel.guessesLeft
-    val randomInt by gameViewModel.randomInt
+    val correctAnswer = if (gameViewModel.gameMode.value == "city") {
+        gameViewModel.correctCity.value.name
+    } else {
+        gameViewModel.randomInt.value.toString()
+    }
 
     Column(
         modifier = Modifier
@@ -45,12 +51,11 @@ fun EndScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Display how many guesses the user had left
         Text(
             text = if (guessesLeft > 0) {
-                "Well done! \nYou managed to guess correctly with $guessesLeft guesses left" // Displays guesses left
+                "Well done! You guessed correctly with $guessesLeft guesses left."
             } else {
-                "You didn't guess the number. Better luck next time!" // Displays if 0 guesses left
+                "You didn't guess correctly. Better luck next time!"
             },
             textAlign = TextAlign.Center,
             style = TextStyle(
@@ -58,39 +63,33 @@ fun EndScreen(
                 color = Purple40,
                 fontWeight = FontWeight.Bold
             ),
-            modifier = Modifier
-                .padding(bottom = 30.dp)
+            modifier = Modifier.padding(bottom = 30.dp)
         )
 
-        // Text to display the number
         Text(
-            text = "The number was",
+            text = if (gameViewModel.gameMode.value == "city") {
+                "The correct city was"
+            } else {
+                "The correct number was"
+            },
             textAlign = TextAlign.Center,
             style = TextStyle(
                 fontSize = 20.sp,
                 color = Purple40,
                 fontWeight = FontWeight.Bold
             ),
-            modifier = Modifier
+            modifier = Modifier.padding(bottom = 10.dp)
         )
 
-        // Display actual number and gradient circle
-        GuessResultComponent(randomInt.toString(), 200) // add randomInt to string
+        GuessResultComponent(correctAnswer.toString(), 200)
 
-        // Display Play again button
-        Row(
-            modifier = Modifier.padding(top = 40.dp, bottom = 10.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            ButtonComponent(
-                onClick = {
-                    gameViewModel.resetGame() // Reset the game when "Play again" is clicked
-                    navController.navigate("home") // Navigate to the game screen
-                },
-                label = "Play again",
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-            )
-        }
+        ButtonComponent(
+            onClick = {
+                navController.navigate("home")
+                gameViewModel.resetGame()
+            },
+            label = "Play Again",
+            modifier = Modifier.padding(top = 40.dp, bottom = 10.dp)
+        )
     }
 }

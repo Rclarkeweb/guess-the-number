@@ -1,5 +1,6 @@
 package com.example.guess_the_number
 
+import CityGuesser
 import GameScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -60,6 +61,9 @@ fun App(
 
         composable(route = "end") {
             EndScreen(navController, gameViewModel)
+        }
+        composable(route = "cityguesser") {
+            CityGuesser(navController = navController, gameViewModel = gameViewModel)
         }
     }
 }

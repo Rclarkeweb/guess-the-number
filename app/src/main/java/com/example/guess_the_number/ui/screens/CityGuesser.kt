@@ -37,25 +37,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
-
 @Composable
-fun GameScreen(
+fun CityGuesser(
     navController: NavController,
-    gameViewModel: GameViewModel = viewModel() // Get ViewModel instance
+    gameViewModel: GameViewModel = viewModel()
 ) {
-
     var usersGuess by gameViewModel.usersGuess
     val guessesLeft by gameViewModel.guessesLeft
-    val randomInt by gameViewModel.randomInt
-    val difficultyLevel by gameViewModel.difficultyLevel
-    val max = gameViewModel.max
-
-    // state moved, variables maintained
     val guessResult by gameViewModel.guessResult
     val gameOver by gameViewModel.gameOver
+    val hintMessage by gameViewModel.hintMessage
 
 
-    // Navigate to end screen when game is over
     if (gameOver) {
         Handler(Looper.getMainLooper()).postDelayed({
             navController.navigate("end")
@@ -80,80 +73,64 @@ fun GameScreen(
             GuessesLeftComponent(guessesLeft)
         }
 
-        // Guess prompt
-        Row(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
+        // City guess prompt
+        Text(
+            text = "Guess the correct city!",
+            style = TextStyle(
+                fontSize = 24.sp,
+                color = Purple40,
+                fontWeight = FontWeight.Normal
+            ),
+            modifier = Modifier.padding(vertical = 20.dp),
+            textAlign = TextAlign.Center
+        )
+
+        // Input for city guess
+        TextField(
+            value = usersGuess,
+            onValueChange = { gameViewModel.usersGuess.value = it },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Your guess") }
+        )
+
+        // Submit button
+        ButtonComponent(
+            onClick = { gameViewModel.submitGuess()
+                usersGuess = ""},
+            label = "Submit Guess",
+            modifier = Modifier.padding(top = 10.dp)
+        )
+
+        // Hint display functionality
+        if (hintMessage.isNotEmpty()) {
             Text(
-                text = "Guess a number between\n1 and ${max - 1}",
+                text = hintMessage,
                 style = TextStyle(
-                    fontSize = 24.sp,
+                    fontSize = 16.sp,
                     color = Purple40,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Medium
                 ),
-                modifier = Modifier
-                    .padding(bottom = 20.dp, top = 10.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(vertical = 10.dp),
                 textAlign = TextAlign.Center
             )
         }
 
-        // Input field and button for submitting guesses
-        Column(
-            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = usersGuess,
-                onValueChange = { input ->
-                    if (input.all { it.isDigit() }) {
-                        gameViewModel.usersGuess.value = input
-                    }
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier
-            )
-
+        // Show Hint Button based on guesses left
+        if (guessesLeft in 1..3) {
             ButtonComponent(
-                onClick = { gameViewModel.submitGuess()
-                          usersGuess = ""},
-                label = "Submit Guess!",
+                onClick = { gameViewModel.revealHint() },
+                label = "Hey, dumdum, need a hint?",
                 modifier = Modifier.padding(top = 10.dp)
             )
         }
-
-        // Display Guess Result
-        Row(
-            modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
-        ) {
-            GuessResultComponent(guessResult, 400)
-        }
+        // Display guess result
+        GuessResultComponent(guessResult, 400)
 
         // Finish Game Button
-        Row(
-            modifier = Modifier.padding(top = 40.dp, bottom = 10.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            FinishGameButtonComponent(
-                onClick = { navController.navigate("home") },
-                label = "Finish game",
-                modifier = Modifier.padding(horizontal = 10.dp)
-            )
-        }
+        FinishGameButtonComponent(
+            onClick = { navController.navigate("home") },
+            label = "Finish game",
+            modifier = Modifier.padding(top = 40.dp)
+        )
     }
-    }
-
-// Logic to check if number is correct or incorrect. Returns a message to the user
-
-// Moved to ViewModel
-
-//fun isGuessCorrect(randomNum: Int, guess: Int): String {
-//    return when {
-//        randomNum == guess -> "Correct!"
-//        randomNum > guess -> "Too low\nGuess again..."
-//        randomNum < guess -> "Too high\nGuess again..."
-//        else -> "Problem!"
-//    }
-//}
-
+}

@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.guess_the_number.ui.components.ButtonComponent
 import com.example.guess_the_number.ui.components.DifficultyLevelComponent
+import com.example.guess_the_number.ui.components.DifficultyLevelComponent
 import com.example.guess_the_number.ui.components.MainHeadingComponent
 import com.example.guess_the_number.ui.theme.Purple40
 import com.example.guess_the_number.ui.theme.Purple80
@@ -46,18 +47,16 @@ fun HomeScreen(
     ) {
         MainHeadingComponent("Can you guess the number?")
 
-        // CITIES Button
+
         // Button currently sets gameMode to "city", but otherwise functions like "Start Game" button
-//        ButtonComponent(
-//            onClick = {
-//                gameViewModel.gameMode.value = "city"
-//                gameViewModel.resetGame() // needs changing?
-//                navController.navigate("game") // needs changing
-//            },
-//            label = "Guess the capital city?",
-//            modifier = Modifier
-//                .padding(horizontal = 10.dp)
-//        )
+        ButtonComponent(
+            onClick = {
+                gameViewModel.gameMode.value = "city"
+                navController.navigate("cityguesser")
+            },
+            label = "Play City Guesser",
+            modifier = Modifier.padding(horizontal = 10.dp)
+        )
 
         // Difficulty Selection Box
         Text(
@@ -65,7 +64,6 @@ fun HomeScreen(
             color = Purple40,
             modifier = Modifier.padding(vertical = 16.dp)
         )
-
         // Display difficulty level RadioButtons
         DifficultyLevelComponent(
             selectedLevel = gameViewModel.difficultyLevel.value, // pass current difficultyLevel state value
@@ -75,28 +73,6 @@ fun HomeScreen(
             }
         )
 
-
-        // OLD Level buttons
-//        Row(
-//            modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
-//            horizontalArrangement = Arrangement.SpaceEvenly
-//        ) {
-//            ButtonComponent(
-//                onClick = { gameViewModel.difficultyLevel.value = 0 },
-//                label = "Easy",
-//                modifier = Modifier.padding(horizontal = 8.dp)
-//            )
-//            ButtonComponent(
-//                onClick = { gameViewModel.difficultyLevel.value = 1 },
-//                label = "Medium",
-//                modifier = Modifier.padding(horizontal = 8.dp)
-//            )
-//            ButtonComponent(
-//                onClick = { gameViewModel.difficultyLevel.value = 2 },
-//                label = "Hard",
-//                modifier = Modifier.padding(horizontal = 8.dp)
-//            )
-//        }
     }
 
     // Start game and How to Play Buttons
@@ -105,6 +81,7 @@ fun HomeScreen(
                 .safeDrawingPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
 
             ButtonComponent(
                 onClick = {
@@ -125,5 +102,4 @@ fun HomeScreen(
 
         }
     }
-
 
